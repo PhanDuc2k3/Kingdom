@@ -13,6 +13,13 @@ define config.has_voice = True
 
 define config.main_menu_music = None
 
+define config.has_autosave = False
+define config.autosave_on_choice = False
+define config.autosave_on_input = False
+define config.autosave_on_quit = False
+define config.save_on_mobile_background = False
+define config.has_quicksave = False
+
 define build.name = "Kingdom"
 define build.directory_name = "Kingdom"
 define build.executable_name = "Kingdom"

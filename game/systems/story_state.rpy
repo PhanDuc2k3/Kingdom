@@ -22,6 +22,7 @@ init python:
         reset_player_state()
         reset_relationship_state()
         reset_story_state()
+        reset_adventure_guild_state()
 
     def set_story_stage(stage, location=None, turn_limit=0):
         store.story_stage = stage

@@ -354,8 +354,12 @@ screen file_slots(mode_text):
                 xalign 0.5
 
                 textbutton _("Trước") style "kingdom_file_page_button" action FilePagePrevious()
-                textbutton _("Tự động") style "kingdom_file_page_button" action FilePage("auto")
-                textbutton _("Nhanh") style "kingdom_file_page_button" action FilePage("quick")
+
+                if config.has_autosave:
+                    textbutton _("Tự động") style "kingdom_file_page_button" action FilePage("auto")
+
+                if config.has_quicksave:
+                    textbutton _("Nhanh") style "kingdom_file_page_button" action FilePage("quick")
 
                 for page in range(1, 6):
                     textbutton "[page]" style "kingdom_file_page_button" action FilePage(page)
