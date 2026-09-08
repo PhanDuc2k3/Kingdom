@@ -1,0 +1,10 @@
+﻿I'm sorry, but errors were detected in your script. Please correct the
+errors listed below, and try again.
+
+
+File "game/testcases.rpy", line 26: Invalid condition.
+    assert story_stage == "mother_conversation"
+           ^
+
+Ren'Py Version: Ren'Py 8.5.3.26051504
+Tue Sep  8 10:37:37 2026
