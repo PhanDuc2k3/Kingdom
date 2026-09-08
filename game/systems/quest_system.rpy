@@ -7,15 +7,15 @@ init python:
             return existing
 
         acquisition = item_def.get("acquisition", {})
-        material = acquisition.get("material", "rare_material")
+        material = acquisition.get("material", "vật liệu hiếm")
         source = acquisition.get("source", "wind_wolf_king")
         region = acquisition.get("region", "gale_forest")
         blacksmith = acquisition.get("blacksmith", "border_blacksmith")
 
         quest = {
             "id": quest_id,
-            "title": "Footprints of the Wind Wolf",
-            "description": "Gather the material needed to craft %s." % item_def.get("name", item_id),
+            "title": "Dấu chân của Phong Lang",
+            "description": "Thu thập nguyên liệu cần thiết để chế tạo %s." % item_def.get("name", item_id),
             "status": "proposed",
             "item_definition_id": item_id,
             "required_rank": acquisition.get("required_rank", "D"),

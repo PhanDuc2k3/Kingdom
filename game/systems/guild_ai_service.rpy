@@ -22,7 +22,7 @@ init python:
         if intent.get("weapon_type") == "sword" and ("movement_speed" in effects or "speed" in traits or "lightweight" in traits):
             return {
                 "id": "windwalker_sword",
-                "name": "Phong Hanh Kiem",
+                "name": "Phong Hành Kiếm",
                 "category": "weapon",
                 "weapon_type": "sword",
                 "rarity": "epic",
@@ -32,17 +32,17 @@ init python:
                     {"type": "movement_speed", "value": 6, "unit": "percent"},
                 ],
                 "passive": {
-                    "name": "Light Step",
+                    "name": "Khinh Bộ",
                     "type": "stamina_efficiency",
-                    "description": "Dodging feels less costly while carrying the blade.",
+                    "description": "Khi mang kiếm, động tác né tránh ít tiêu hao thể lực hơn.",
                 },
                 "unique_skill": {
-                    "name": "Phong Bo",
+                    "name": "Phong Bộ",
                     "type": "movement_buff",
-                    "description": "After a successful dodge, movement speed rises briefly.",
+                    "description": "Sau khi né tránh thành công, tốc độ di chuyển tăng trong thời gian ngắn.",
                 },
-                "lore": "A light blade forged with silver wind stone from the Wind Wolf King.",
-                "description": "A swift sword for adventurers who value footwork over brute force.",
+                "lore": "Một thanh kiếm nhẹ được rèn bằng Ngân Phong Thạch từ Phong Lang Vương.",
+                "description": "Thanh kiếm nhanh dành cho người coi trọng bước chân hơn sức mạnh thô.",
                 "acquisition": {
                     "type": "craft",
                     "material": "silver_wind_stone",
@@ -63,7 +63,7 @@ init python:
         if "dragon" in traits:
             return {
                 "id": "dragon_slayer",
-                "name": "Dragon Slayer",
+                "name": "Long Sát Kiếm",
                 "category": "weapon",
                 "weapon_type": "sword",
                 "rarity": "legendary",
@@ -73,17 +73,17 @@ init python:
                     {"type": "dragon_damage", "value": 15, "unit": "percent"},
                 ],
                 "passive": {
-                    "name": "Dragon Bane",
+                    "name": "Long Khắc",
                     "type": "dragon_damage",
-                    "description": "Deals more damage to dragon-type enemies.",
+                    "description": "Gây thêm sát thương lên kẻ địch long tộc.",
                 },
                 "unique_skill": {
-                    "name": "Dragon Breaker",
+                    "name": "Phá Long Kích",
                     "type": "armor_break",
-                    "description": "A rare technique for cracking dragon scales.",
+                    "description": "Kỹ thuật hiếm có dùng để phá lớp vảy rồng.",
                 },
-                "lore": "Only one such sword is recorded in the oldest guild ledgers.",
-                "description": "A legendary anti-dragon blade. Its true power depends on upgrades and mastery.",
+                "lore": "Những sổ ghi chép cổ nhất của Hội chỉ nhắc tới một thanh kiếm như vậy.",
+                "description": "Một thanh kiếm huyền thoại chuyên khắc chế rồng. Sức mạnh thật sự phụ thuộc vào nâng cấp và khả năng làm chủ.",
                 "acquisition": {
                     "type": "drop",
                     "source": "ancient_dragon",
@@ -100,14 +100,14 @@ init python:
 
         return {
             "id": "guild_practice_blade",
-            "name": "Guild Practice Blade",
+            "name": "Kiếm Luyện Tập của Hội",
             "category": "weapon",
             "weapon_type": intent.get("weapon_type") or "sword",
             "rarity": "common",
             "base_attack": 18,
             "tags": ["training"],
             "effects": [],
-            "description": "A balanced training weapon kept by the guild.",
+            "description": "Vũ khí luyện tập cân bằng được Hội cất giữ.",
             "acquisition": {
                 "type": "guild_shop",
                 "required_rank": "D",
@@ -136,7 +136,7 @@ init python:
                 "item": item,
                 "matches": matches,
                 "quest": None,
-                "message": "Co ghi chep ve %s, nhung Rank %s hien tai chua du de tiep can." % (item.get("name"), store.guild_rank),
+                "message": "Có ghi chép về %s, nhưng Hạng %s hiện tại của ngài chưa đủ để tiếp cận." % (item.get("name"), store.guild_rank),
             }
 
         quest = build_acquisition_quest(item)
@@ -148,7 +148,7 @@ init python:
             "item": item,
             "matches": matches,
             "quest": quest,
-            "message": "Co %s trong ghi chep cua Hoi. Neu ngai muon, Hoi co the lap nhiem vu lay nguyen lieu de che tao." % item.get("name"),
+            "message": "Có %s trong ghi chép của Hội. Nếu ngài muốn, Hội có thể lập nhiệm vụ lấy nguyên liệu để chế tạo." % item.get("name"),
         }
 
     def guild_recall_previous_discussion(intent):
@@ -166,9 +166,9 @@ init python:
             "kind": "memory",
             "item": item,
             "quest": store.guild_quests.get("quest_acquire_%s" % item_id),
-            "message": "Lan truoc chung ta noi ve %s. Vat lieu chinh la %s." % (
+            "message": "Lần trước chúng ta đã nói về %s. Vật liệu chính là %s." % (
                 item.get("name"),
-                item.get("acquisition", {}).get("material", "vat lieu hiem"),
+                guild_display_name(item.get("acquisition", {}).get("material", "vật liệu hiếm")),
             ),
         }
 
@@ -181,7 +181,7 @@ init python:
             result = {
                 "status": "impossible",
                 "kind": "world_rule",
-                "message": "Khong ton tai loai vu khi pha vo luat the gioi trong ghi chep cua Hoi.",
+                "message": "Không tồn tại loại vũ khí phá vỡ luật thế giới trong ghi chép của Hội.",
             }
             store.guild_last_result = result
             guild_remember_message("receptionist", result["message"])
@@ -207,7 +207,7 @@ init python:
             result = {
                 "status": "impossible",
                 "kind": "no_proposal",
-                "message": "Hoi khong tim thay phuong an hop le cho yeu cau nay.",
+                "message": "Hội không tìm thấy phương án hợp lệ cho yêu cầu này.",
             }
             store.guild_last_result = result
             guild_remember_message("receptionist", result["message"])
@@ -220,7 +220,7 @@ init python:
                 "kind": "balance_rejected",
                 "proposal": proposal,
                 "validation": validation,
-                "message": "De xuat bi tu choi vi vuot gioi han can bang cua the gioi.",
+                "message": "Đề xuất bị từ chối vì vượt giới hạn cân bằng của thế giới.",
             }
             store.guild_last_result = result
             guild_remember_message("receptionist", result["message"])
@@ -234,15 +234,15 @@ init python:
         if status == "locked":
             quest = None
             store.guild_pending_quest_id = None
-            message = "Co ghi chep ve %s, nhung dieu kien hien tai chua du de tiep can." % item.get("name")
+            message = "Có ghi chép về %s, nhưng điều kiện hiện tại chưa đủ để tiếp cận." % item.get("name")
         else:
             quest = build_acquisition_quest(item)
             guild_remember_quest(quest["id"])
             store.guild_pending_quest_id = quest["id"]
-            message = "Hoi co the de xuat %s. Can %s, thuong lien quan den %s." % (
+            message = "Hội có thể đề xuất %s. Cần %s, thường liên quan đến %s." % (
                 item.get("name"),
-                item.get("acquisition", {}).get("material", "vat lieu hiem"),
-                item.get("acquisition", {}).get("source", "nguon chua ro"),
+                guild_display_name(item.get("acquisition", {}).get("material", "vật liệu hiếm")),
+                guild_display_name(item.get("acquisition", {}).get("source", "nguồn chưa rõ")),
             )
 
         result = {

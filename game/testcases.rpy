@@ -138,3 +138,94 @@ testcase guild_state_roundtrip_data_is_plain_saveable:
     assert eval (result["quest"]["id"] in snapshot["quests"])
     assert eval ("windwalker_sword" in snapshot["discussed"])
     assert eval (instance["definition_id"] == "windwalker_sword")
+
+testcase childhood_time_advances_month_and_age:
+    $ reset_kingdom_state()
+    $ start_age = player_age
+    $ start_month = player_month
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    $ advance_month()
+    assert eval (start_age == 6)
+    assert eval (start_month == 1)
+    assert eval (player_age == 7)
+    assert eval (player_month == 1)
+
+testcase childhood_activity_rewards_and_core_bonus:
+    $ reset_kingdom_state()
+    $ give_divine_core("sword_core")
+    $ result = perform_monthly_activity("sword_training")
+    assert eval (result["ok"])
+    assert eval (player_mastery["sword_mastery"] == 3.6)
+    assert eval (player_strength > 5)
+    assert eval (activities_performed["sword_training"] == 1)
+
+testcase childhood_class_discovery_swordsman:
+    $ reset_kingdom_state()
+    $ give_divine_core("sword_core")
+    $ add_player_mastery("sword_mastery", 8)
+    $ events = check_class_discovery()
+    assert eval ("event_first_class_swordsman" in events)
+    $ unlock_class("swordsman")
+    assert eval ("swordsman" in unlocked_classes)
+    assert eval (class_states["swordsman"]["state"] == "unlocked")
+
+testcase childhood_magic_swordsman_requires_sword_magic_and_trait:
+    $ reset_kingdom_state()
+    $ give_divine_core("mana_core")
+    $ add_player_mastery("sword_mastery", 10)
+    $ add_player_mastery("magic_mastery", 10)
+    $ events = check_class_discovery()
+    assert eval ("event_magic_swordsman_discovery" in events)
+    $ unlock_class("magic_swordsman")
+    assert eval ("magic_swordsman" in unlocked_classes)
+
+testcase childhood_sneak_out_sets_guild_flag:
+    $ reset_kingdom_state()
+    $ set_age(7)
+    $ add_player_mastery("exploration", 6)
+    $ event_def = choose_next_event("mansion_exploration")
+    assert eval (event_def["id"] == "event_sneak_out")
+    $ set_world_flag("sneaked_out_once")
+    $ set_world_flag("knows_adventurer_guild")
+    assert eval (has_world_flag("knows_adventurer_guild"))
+
+testcase childhood_political_warning_after_age_9:
+    $ reset_kingdom_state()
+    $ set_age(9)
+    $ event_def = choose_next_event("father_observation")
+    assert eval (event_def["id"] == "event_political_warning")
+
+testcase npc_context_includes_childhood_flags:
+    $ reset_kingdom_state()
+    $ set_age(8)
+    $ set_month(5)
+    $ give_divine_core("mana_core")
+    $ unlock_class("mage")
+    $ set_world_flag("caught_sneaking_out")
+    $ context = build_npc_context("mother")
+    assert eval (context["age"] == 8)
+    assert eval (context["month"] == 5)
+    assert eval (context["divine_core"] == "mana_core")
+    assert eval ("mage" in context["classes"])
+    assert eval (context["major_flags"]["caught_sneaking_out"])
+
+testcase childhood_saveable_state_snapshot:
+    $ reset_kingdom_state()
+    $ give_divine_core("wisdom_core")
+    $ perform_monthly_activity("library_reading")
+    $ unlock_class("mage")
+    $ set_world_flag("saw_refugees")
+    $ snapshot = {"age": player_age, "month": player_month, "mastery": dict(player_mastery), "classes": list(unlocked_classes), "core": divine_core_id, "flags": dict(world_flags), "events": list(completed_event_ids), "dialogue": dict(used_activity_dialogue), "activities": dict(activities_performed)}
+    assert eval (snapshot["core"] == "wisdom_core")
+    assert eval ("library_reading" in snapshot["activities"])
+    assert eval ("saw_refugees" in snapshot["flags"])

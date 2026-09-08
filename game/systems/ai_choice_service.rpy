@@ -105,6 +105,7 @@ init python:
                 "personality": NPC_PERSONALITIES.get(npc_id, []),
             },
             "recent_dialogue": list(store.recent_dialogue),
+            "npc_context": build_npc_context(npc_id),
             "allowed_actions": allowed_actions or [
                 "đặt câu hỏi",
                 "quan sát",

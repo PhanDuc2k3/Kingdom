@@ -44,6 +44,30 @@ style guild_button_text is text:
     xalign 0.5
 
 init python:
+    GUILD_DISPLAY_NAMES = {
+        "common": "Thường",
+        "uncommon": "Không thường",
+        "rare": "Hiếm",
+        "epic": "Sử thi",
+        "legendary": "Huyền thoại",
+        "movement_speed": "Tốc độ di chuyển",
+        "attack_speed": "Tốc độ đánh",
+        "dragon_damage": "Sát thương lên rồng",
+        "silver_wind_stone": "Ngân Phong Thạch",
+        "wind_wolf_king": "Phong Lang Vương",
+        "ancient_dragon": "Cổ Long",
+        "gale_forest": "Rừng Gió Xoáy",
+        "border_blacksmith": "Thợ rèn vùng biên",
+        "travel": "Di chuyển",
+        "investigate": "Điều tra",
+        "defeat_boss": "Đánh bại boss",
+        "loot_material": "Thu thập nguyên liệu",
+        "craft": "Chế tạo",
+    }
+
+    def guild_display_name(value):
+        return GUILD_DISPLAY_NAMES.get(value, value)
+
     def submit_guild_chat(text):
         clean = (text or "").strip()
         if clean:
@@ -55,23 +79,23 @@ init python:
         effects = []
         for effect in item.get("effects", []):
             effects.append("%s +%s%s" % (
-                effect.get("type", "effect"),
+                guild_display_name(effect.get("type", "hiệu ứng")),
                 effect.get("value", ""),
                 "%" if effect.get("unit") == "percent" else "",
             ))
-        return "%s | %s | ATK %s | %s" % (
+        return "%s | %s | Công %s | %s" % (
             item.get("name", item.get("id", "")),
-            item.get("rarity", "common").title(),
+            guild_display_name(item.get("rarity", "common")),
             item.get("base_attack", 0),
-            ", ".join(effects) or "no effect",
+            ", ".join(effects) or "không có hiệu ứng",
         )
 
     def format_guild_quest_details(quest):
         if not quest:
-            return "No quest selected."
+            return "Chưa chọn nhiệm vụ."
         lines = [quest.get("title", quest.get("id", "")), quest.get("description", "")]
         for index, step in enumerate(quest.get("steps", []), 1):
-            lines.append("%d. %s: %s" % (index, step.get("type"), step.get("target")))
+            lines.append("%d. %s: %s" % (index, guild_display_name(step.get("type")), guild_display_name(step.get("target"))))
         return "\n".join(lines)
 
     def format_guild_match_names(matches):
@@ -106,12 +130,12 @@ screen adventure_guild():
                 vbox:
                     spacing 6
                     xsize 310
-                    text "Hoi Mao Hiem Gia" style "guild_title_text"
-                    text "Le tan: Mira" style "guild_body_text"
-                    text "Guild Rank [guild_rank]" style "guild_small_text"
+                    text "Hội Mạo Hiểm Giả" style "guild_title_text"
+                    text "Lễ tân: Mira" style "guild_body_text"
+                    text "Hạng hội: [guild_rank]" style "guild_small_text"
                     null height 10
-                    text "Registry: [len(world_item_registry)] item definitions" style "guild_small_text"
-                    text "Active quests: [len(active_guild_quest_ids)]" style "guild_small_text"
+                    text "Kho vật phẩm: [len(world_item_registry)] định nghĩa" style "guild_small_text"
+                    text "Nhiệm vụ đang nhận: [len(active_guild_quest_ids)]" style "guild_small_text"
 
                 viewport:
                     xsize 970
@@ -132,7 +156,7 @@ screen adventure_guild():
                                     text message["text"] style "guild_body_text"
 
                         if not guild_recent_messages:
-                            text "Mira dang cho cau hoi cua ngai." style "guild_body_text"
+                            text "Mira đang chờ câu hỏi của ngài." style "guild_body_text"
 
             frame:
                 style "guild_input_box"
@@ -145,7 +169,7 @@ screen adventure_guild():
                         length 160
                         xsize 1010
 
-                    textbutton "Gui":
+                    textbutton "Gửi":
                         style "guild_button"
                         action [Function(submit_guild_chat, guild_input), SetScreenVariable("guild_input", ""), SetScreenVariable("show_details", False)]
 
@@ -162,24 +186,24 @@ screen adventure_guild():
 
                     vbox:
                         spacing 8
-                        text "Ket qua: [guild_last_result.get('status', '').upper()]" style "guild_small_text"
+                        text "Kết quả: [guild_last_result.get('status', '').upper()]" style "guild_small_text"
                         if item:
                             text format_guild_item_line(item) style "guild_body_text"
                         if quest:
-                            text "Nhiem vu de xuat: [quest.get('title')]" style "guild_body_text"
+                            text "Nhiệm vụ đề xuất: [quest.get('title')]" style "guild_body_text"
                         if len(matches) > 1:
-                            text "Vat pham gan dung: [format_guild_match_names(matches)]" style "guild_small_text"
+                            text "Vật phẩm gần đúng: [format_guild_match_names(matches)]" style "guild_small_text"
 
                         hbox:
                             spacing 12
                             if quest:
-                                textbutton "Nhan nhiem vu":
+                                textbutton "Nhận nhiệm vụ":
                                     style "guild_button"
                                     action Function(accept_guild_quest, quest["id"])
-                                textbutton "Tu choi":
+                                textbutton "Từ chối":
                                     style "guild_button"
                                     action Function(decline_guild_quest, quest["id"])
-                                textbutton "Xem chi tiet":
+                                textbutton "Xem chi tiết":
                                     style "guild_button"
                                     action ToggleScreenVariable("show_details")
 
@@ -197,7 +221,7 @@ screen adventure_guild():
             hbox:
                 spacing 12
                 xalign 1.0
-                textbutton "Dong":
+                textbutton "Đóng":
                     style "guild_button"
                     action Return()
 
